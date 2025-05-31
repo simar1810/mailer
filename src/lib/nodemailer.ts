@@ -39,7 +39,7 @@ export const sendMail = async (mailOptions: MailOptions) => {
   }
 
   const options = {
-    from: `"MailSenderPro" <${zohoUser}>`,
+    from: `"Rajan Bookings" <${zohoUser}>`,
     to: mailOptions.to,
     subject: mailOptions.subject,
     text: mailOptions.textBody,

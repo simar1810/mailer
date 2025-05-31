@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'MailSenderPro',
-  description: 'Send emails with AI-powered content generation and HTML optimization.',
+  title: 'Rajan Bookings',
+  description: 'Most Trusted B2B Hotel Partner',
 };
 
 export default function RootLayout({
