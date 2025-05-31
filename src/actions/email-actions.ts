@@ -8,19 +8,33 @@ interface SendEmailParams {
   htmlBody?: string;
 }
 
-export async function sendEmailAction(params: SendEmailParams): Promise<{ success: boolean; message?: string; error?: string }> {
-  const mailOptions: NodemailerMailOptions = {
+function mailOptions(mail: string, params: SendEmailParams): NodemailerMailOptions {
+  return {
     to: params.recipient,
     subject: params.subject,
     textBody: params.textBody,
     htmlBody: params.htmlBody,
-  };
+  }
+};
 
-  const result = await sendMail(mailOptions);
+export async function sendEmailAction(params: SendEmailParams): Promise<{ success: boolean; message?: string; error?: string }> {
+  try {
+    const promises = [];
+    for (const mail of params.recipient.replace(/ /g, "").split(",")) {
+      promises.push(sendMail(mailOptions(mail, params)))
+    }
+    const result = await Promise.all(promises);
 
-  if (result.success) {
-    return { success: true, message: `Email sent successfully to ${params.recipient}. Message ID: ${result.messageId}` };
-  } else {
-    return { success: false, error: result.error || "An unknown error occurred while sending the email." };
+    if (result[0].success) {
+      return { success: true, message: `Email sent successfully to ${params.recipient}. Message ID: ${result[0].messageId}` };
+    } else {
+      return { success: false, error: result[0].error || "An unknown error occurred while sending the email." };
+    }
+  } catch (error) {
+    return {
+      success: false, error: error instanceof Error
+        ? error.message
+        : "An unknown error occurred while sending the email."
+    };
   }
 }

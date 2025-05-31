@@ -23,7 +23,7 @@ import { useToast } from '@/hooks/use-toast';
 import { generateEmailContentAction } from '@/actions/ai-actions';
 import { sendEmailAction } from '@/actions/email-actions';
 
-interface ComposeEmailFormProps {}
+interface ComposeEmailFormProps { }
 
 const ComposeEmailForm: FC<ComposeEmailFormProps> = () => {
   const { toast } = useToast();
@@ -35,50 +35,9 @@ const ComposeEmailForm: FC<ComposeEmailFormProps> = () => {
     defaultValues: {
       recipient: '',
       subject: '',
-      titlePrompt: '',
       body: '',
     },
   });
-
-  const handleGenerateContent = async () => {
-    const titlePromptValue = form.getValues('titlePrompt');
-    if (!titlePromptValue) {
-      toast({
-        variant: 'destructive',
-        title: 'Prompt Required',
-        description: 'Please enter a title/prompt for AI content generation.',
-      });
-      return;
-    }
-
-    setIsGenerating(true);
-    try {
-      const result = await generateEmailContentAction({ prompt: titlePromptValue });
-      if ('error' in result) {
-        toast({
-          variant: 'destructive',
-          title: 'AI Generation Failed',
-          description: result.error,
-        });
-      } else {
-        form.setValue('subject', result.subject, { shouldValidate: true });
-        form.setValue('body', result.body, { shouldValidate: true });
-        // form.setValue('titlePrompt', result.title); // Optionally update title if AI provides one different from prompt
-        toast({
-          title: 'Content Generated',
-          description: 'Subject and body have been populated by AI.',
-        });
-      }
-    } catch (error) {
-      toast({
-        variant: 'destructive',
-        title: 'AI Generation Error',
-        description: error instanceof Error ? error.message : 'An unknown error occurred.',
-      });
-    } finally {
-      setIsGenerating(false);
-    }
-  };
 
   const onSubmit = async (values: ComposeEmailFormValues) => {
     setIsSending(true);
@@ -103,7 +62,7 @@ const ComposeEmailForm: FC<ComposeEmailFormProps> = () => {
         });
       }
     } catch (error) {
-       toast({
+      toast({
         variant: 'destructive',
         title: 'Sending Error',
         description: error instanceof Error ? error.message : 'An unknown error occurred.',
@@ -143,8 +102,8 @@ const ComposeEmailForm: FC<ComposeEmailFormProps> = () => {
             </FormItem>
           )}
         />
-        
-        <FormField
+
+        {/* <FormField
           control={form.control}
           name="titlePrompt"
           render={({ field }) => (
@@ -156,10 +115,10 @@ const ComposeEmailForm: FC<ComposeEmailFormProps> = () => {
               <FormMessage />
             </FormItem>
           )}
-        />
+        /> */}
 
         <div className="relative">
-           <Button
+          {/* <Button
             type="button"
             variant="outline"
             size="sm"
@@ -173,7 +132,7 @@ const ComposeEmailForm: FC<ComposeEmailFormProps> = () => {
               <Wand2 className="h-4 w-4" />
             )}
             Generate with AI
-          </Button>
+          </Button> */}
           <FormField
             control={form.control}
             name="body"
